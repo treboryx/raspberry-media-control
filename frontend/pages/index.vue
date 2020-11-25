@@ -26,17 +26,17 @@ export default {
     };
   },
   async created() {
-    const vol = await axios.get("http://localhost:4000/volume");
+    const vol = await axios.get("http://192.168.1.254:4000/volume");
     this.volume = vol.data.volume;
   },
   methods: {
     muteF() {
       this.mute = !this.mute;
-      axios.post(`http://localhost:4000/mute/${this.mute}`);
+      axios.post(`http://192.168.1.254:4000/mute/${this.mute}`);
     },
     updateVol(vol) {
       vol = this.volume;
-      axios.post(`http://localhost:4000/volume/${vol}`);
+      axios.post(`http://192.168.1.254:4000/volume/${vol}`);
     }
   }
 };
