@@ -35,8 +35,8 @@ export default {
     port: 3000, // default: 3000
     host: "0.0.0.0", // default: localhost
     https: {
-      key: fs.readFileSync(path.resolve(__dirname, "server.key")),
-      cert: fs.readFileSync(path.resolve(__dirname, "server.crt"))
+      key: fs.readFileSync(path.resolve(__dirname, "../server.key")),
+      cert: fs.readFileSync(path.resolve(__dirname, "../server.crt"))
     }
   },
 
