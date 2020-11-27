@@ -2,14 +2,12 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 const setVolume = async (value) => {
-  await exec(
-    `pactl set-sink-volume alsa_output.platform-soc_audio.analog-mono ${value}%`
-  );
+  const sink = await getSink();
+  await exec(`pactl set-sink-volume ${sink} ${value}%`);
 };
 const setMute = async (value) => {
-  await exec(
-    `pactl set-sink-mute alsa_output.platform-soc_audio.analog-mono ${value}`
-  );
+  const sink = await getSink();
+  await exec(`pactl set-sink-mute ${sink} ${value}`);
 };
 
 const getVolume = async () => {
@@ -26,6 +24,24 @@ const getVolume = async () => {
     console.log(e);
     return 3;
   }
+};
+
+const getSink = async () => {
+  const { stdout, stderr } = await exec("pactl info");
+  let n = stdout.split("Default Sink: ");
+  n = n[1].split("Default Source:").trim();
+  n = n[0];
+  return n;
+};
+
+const getMuteStatus = async () => {
+  const sink = await getSink();
+  const { stdout, stderr } = await exec("pactl list");
+  let n = stdout.split(sink);
+  n = n[1].split("Mute: ");
+  n = n[1].split("Volume: ").trim();
+  n = n[0];
+  return n === "no" ? false : true;
 };
 
 module.exports = { setVolume, setMute, getVolume };
