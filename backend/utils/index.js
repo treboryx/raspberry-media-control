@@ -29,8 +29,9 @@ const getVolume = async () => {
 const getSink = async () => {
   const { stdout, stderr } = await exec("pactl info");
   let n = stdout.split("Default Sink: ");
-  n = n[1].split("Default Source:").trim();
-  n = n[0];
+
+  n = n[1].split("Default Source:");
+  n = n[0].trim();
   return n;
 };
 
@@ -39,8 +40,8 @@ const getMuteStatus = async () => {
   const { stdout, stderr } = await exec("pactl list");
   let n = stdout.split(sink);
   n = n[1].split("Mute: ");
-  n = n[1].split("Volume: ").trim();
-  n = n[0];
+  n = n[1].split("Volume: ");
+  n = n[0].trim();
   return n === "no" ? false : true;
 };
 
