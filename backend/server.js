@@ -7,7 +7,6 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
-require("dotenv").config();
 const {
   setVolume,
   setMute,
