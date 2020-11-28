@@ -7,7 +7,7 @@
       <button
         @click="muteF()"
         :class="[mute ? 'bg-red-600' : 'bg-green-600']"
-        class="bg-red-600 p-2 rounded-lg p-4"
+        class="p-2 rounded-lg p-4"
       >
         {{ mute ? "🔇" : "🔊" }}
       </button>
@@ -16,6 +16,24 @@
       Status: Volume level is {{ volume }}% and
       <span v-if="mute" class="ml-1 text-red-500">muted</span>
       <span v-else class="ml-1 text-green-500">unmuted</span>
+    </div>
+    <div class="flex justify-center mt-4">
+      ⬇️⬇️Bluetooth only (Working: Spotify, Youtube, Windows Media Player)⬇️⬇️
+    </div>
+    <div class="flex justify-center items-center">
+      <button @click="cmd('Previous')" class="m-2 bg-blue-600 p-4 rounded-lg">
+        ⏮
+      </button>
+      <button
+        @click="cmd('Pause')"
+        :class="[pause ? 'bg-red-600' : 'bg-green-600']"
+        class="m-8 p-4 rounded-lg"
+      >
+        {{ pause ? "⏸" : "▶" }}
+      </button>
+      <button @click="cmd('Next')" class="m-2 bg-blue-600 p-4 rounded-lg">
+        ⏭
+      </button>
     </div>
   </div>
 </template>
@@ -27,12 +45,15 @@ export default {
   data() {
     return {
       volume: 0,
-      mute: false
+      mute: false,
+      pause: false
     };
   },
   async created() {
-    this.getMute();
-    this.getVolume();
+    const d = await axios.get("http://192.168.1.254:4000");
+    this.volume = d.data.data.volume;
+    this.mute = d.data.data.mute;
+    this.pause = d.data.data.pause;
   },
   methods: {
     muteF() {
@@ -42,14 +63,6 @@ export default {
     updateVol(vol) {
       vol = this.volume;
       axios.post(`http://192.168.1.254:4000/volume/${vol}`);
-    },
-    async getMute() {
-      const f = await axios.get("http://192.168.1.254:4000/mute");
-      this.mute = f.data.mute;
-    },
-    async getVolume() {
-      const vol = await axios.get("http://192.168.1.254:4000/volume");
-      this.volume = vol.data.volume;
     }
   }
 };

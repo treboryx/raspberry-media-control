@@ -7,7 +7,15 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
-const { setVolume, setMute, getVolume, getMute } = require("./utils");
+require("dotenv").config();
+const {
+  setVolume,
+  setMute,
+  getVolume,
+  getMute,
+  paused,
+  cmd,
+} = require("./utils");
 
 const app = express();
 // Body parser
@@ -30,28 +38,9 @@ app.use(hpp());
 // Enable CORS
 app.use(cors());
 
-app.get("/status", (req, res) => {
-  const uptime = moment
-    .duration(process.uptime(), "seconds")
-    .format("w [weeks] d [days], h [hrs], m [min], s [sec]");
-  const started = moment().subtract(process.uptime(), "seconds").format("llll");
-  return res.status(200).send({
-    success: true,
-    data: {
-      uptime,
-      started,
-    },
-  });
-});
-
 app.post("/mute/:value", (req, res) => {
   setMute(req.params.value);
   res.json({ success: true });
-});
-
-app.get("/volume", async (req, res) => {
-  const d = await getVolume();
-  res.json({ success: true, volume: d });
 });
 
 app.post("/volume/:value", async (req, res) => {
@@ -59,9 +48,24 @@ app.post("/volume/:value", async (req, res) => {
   res.json({ success: true });
 });
 
-app.get("/mute", async (req, res) => {
-  const d = await getMute();
-  res.json({ success: true, mute: d });
+app.post("/cmd/:value", async (req, res) => {
+  const commands = ["Play", "Pause", "Next", "Previous"];
+  if (!commands.includes(req.params.value)) return res.json({ succes: false });
+  await cmd(req.params.value);
+  res.json({ success: true });
+});
+
+app.get("/stats", async (req, res) => {
+  const uptime = moment
+    .duration(process.uptime(), "seconds")
+    .format("w [weeks] d [days], h [hrs], m [min], s [sec]");
+  const started = moment().subtract(process.uptime(), "seconds").format("llll");
+  const volume = await getVolume();
+  const mute = await getMute();
+  res.json({
+    success: true,
+    data: { volume, mute, pause: paused, uptime, started },
+  });
 });
 
 const PORT = process.env.PORT || 4000;
