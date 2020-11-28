@@ -50,7 +50,7 @@ export default {
     };
   },
   async created() {
-    await getStats();
+    await this.getStats();
   },
   methods: {
     muteF() {
