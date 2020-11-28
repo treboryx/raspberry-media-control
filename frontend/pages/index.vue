@@ -62,7 +62,7 @@ export default {
       axios.post(`http://192.168.1.254:4000/volume/${vol}`);
     },
     async cmd(cmd) {
-      if (cmd === "Pause") this.pause = !this.pause;
+      if (cmd === "Pause" || cmd === "Play") this.pause = !this.pause;
       await axios.post(`http://192.168.1.254:4000/cmd/${cmd}`);
     },
     async getStats() {
