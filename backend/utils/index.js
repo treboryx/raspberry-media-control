@@ -1,6 +1,6 @@
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
-const paused = false;
+let paused = false;
 
 const setVolume = async (value) => {
   const sink = await getSink();
@@ -47,13 +47,12 @@ const getMute = async () => {
 };
 
 const cmd = async (cmd) => {
+  console.log(cmd);
   if (cmd === "Pause") paused = true;
   if (cmd === "Play") paused = false;
   const { stdout, stderr } = await exec(
-    `dbus-send --system --print-reply --dest=org.bluez /org/bluez/hci0/${process.env.device}/player0 org.bluez.MediaPlayer1.${cmd}`
+    `dbus-send --system --print-reply --dest=org.bluez /org/bluez/hci0/${process.env.DEVICE}/player0 org.bluez.MediaPlayer1.${cmd}`
   );
-  if (stderr) console.log(stderr);
-  return stdout;
 };
 
 module.exports = { setVolume, setMute, getVolume, getMute, paused, cmd };
