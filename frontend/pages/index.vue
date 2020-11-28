@@ -50,7 +50,7 @@ export default {
     };
   },
   async created() {
-    const d = await axios.get("http://192.168.1.254:4000");
+    const d = await axios.get("http://192.168.1.254:4000/stats");
     this.volume = d.data.data.volume;
     this.mute = d.data.data.mute;
     this.pause = d.data.data.pause;
