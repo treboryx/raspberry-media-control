@@ -52,6 +52,8 @@ const cmd = async (cmd) => {
   const { stdout, stderr } = await exec(
     `dbus-send --system --print-reply --dest=org.bluez /org/bluez/hci0/${process.env.device}/player0 org.bluez.MediaPlayer1.${cmd}`
   );
+  if (stderr) console.log(stderr);
+  return stdout;
 };
 
 module.exports = { setVolume, setMute, getVolume, getMute, paused, cmd };
