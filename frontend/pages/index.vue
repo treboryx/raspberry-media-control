@@ -50,10 +50,7 @@ export default {
     };
   },
   async created() {
-    const d = await axios.get("http://192.168.1.254:4000/stats");
-    this.volume = d.data.data.volume;
-    this.mute = d.data.data.mute;
-    this.pause = d.data.data.pause;
+    await getStats();
   },
   methods: {
     muteF() {
@@ -63,6 +60,16 @@ export default {
     updateVol(vol) {
       vol = this.volume;
       axios.post(`http://192.168.1.254:4000/volume/${vol}`);
+    },
+    async cmd(cmd) {
+      if (cmd === "Pause") this.pause = !this.pause;
+      await axios.post(`http://192.168.1.254:4000/cmd/${cmd}`);
+    },
+    async getStats() {
+      const d = await axios.get("http://192.168.1.254:4000/stats");
+      this.volume = d.data.data.volume;
+      this.mute = d.data.data.mute;
+      this.pause = d.data.data.pause;
     }
   }
 };
