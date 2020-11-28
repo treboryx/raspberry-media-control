@@ -35,7 +35,7 @@ const getSink = async () => {
   return n;
 };
 
-const getMuteStatus = async () => {
+const getMute = async () => {
   const sink = await getSink();
   const { stdout, stderr } = await exec("pactl list");
   let n = stdout.split(sink);
@@ -45,4 +45,4 @@ const getMuteStatus = async () => {
   return n === "no" ? false : true;
 };
 
-module.exports = { setVolume, setMute, getVolume };
+module.exports = { setVolume, setMute, getVolume, getMute };

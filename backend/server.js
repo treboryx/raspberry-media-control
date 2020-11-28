@@ -7,7 +7,7 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
-const { setVolume, setMute, getVolume } = require("./utils");
+const { setVolume, setMute, getVolume, getMute } = require("./utils");
 
 const app = express();
 // Body parser
@@ -55,9 +55,13 @@ app.get("/volume", async (req, res) => {
 });
 
 app.post("/volume/:value", async (req, res) => {
-  console.log(req.params.value);
   setVolume(req.params.value);
   res.json({ success: true });
+});
+
+app.get("/mute", async (req, res) => {
+  const d = await getMute();
+  res.json({ success: true, mute: d });
 });
 
 const PORT = process.env.PORT || 4000;
