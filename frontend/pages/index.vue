@@ -25,7 +25,7 @@
         ⏮
       </button>
       <button
-        @click="pause ? cmd('Pause') : cmd('Play')"
+        @click="pause ? cmd('Play') : cmd('Pause')"
         :class="[pause ? 'bg-red-600' : 'bg-green-600']"
         class="m-8 p-4 rounded-lg"
       >
